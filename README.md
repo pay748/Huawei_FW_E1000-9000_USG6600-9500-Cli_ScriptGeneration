@@ -10,6 +10,7 @@ PoolCopy_V2.0-mod.py实际起到exc表格数据处理、copy的功能。
 
 
 注意事项：
+
     1.PoolCopy_V2.0-mod.py文件依赖于service_IpPort_Open statistics.xlsx，ConfigurationTemplate_V2.10.xlsx文件。
     
     2.service_IpPort_Open statistics.xlsx用于存储和输入ip、port、name等信息，ConfigurationTemplate_V2.10.xlsx为配置生成模板。
