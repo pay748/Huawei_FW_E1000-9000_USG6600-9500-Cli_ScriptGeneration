@@ -15,9 +15,9 @@ def FW_snat(JB,JC,GIP,IIP):
     JB['pool']['B'+str(JB_SNAT_line)].value=GIP
     JB['pool']['D'+str(JB_SNAT_line)].value=IIP
 
-def FW_SecurityPolicy(JB,IIP,SP):
+def FW_SecurityPolicy(JB,IIP,SP,i):
     # Security-Policy 传参sip,sp
-    JB_PSecurity_line=7
+    JB_PSecurity_line=7+i
     JB['pool']['D'+str(JB_PSecurity_line)].value=IIP
     if '-' in str(SP):     #连续端口端判断
         JB['pool']['E'+str(JB_PSecurity_line)].value=SP.replace('-',' to ')
@@ -25,9 +25,8 @@ def FW_SecurityPolicy(JB,IIP,SP):
         JB['pool']['E'+str(JB_PSecurity_line)].value=SP
     JB_PSecurity_line+=1
 
-def FW_dnat(JB,i,GIP,GP,IIP,SP):
+def FW_dnat(JB_DNAT_line,JB,GIP,GP,IIP,SP):
     # NAT service 传参gip,gp,sip,sp
-    JB_DNAT_line=17
     if type(GP) != type(1): #端口数量判断，单端口筛选
         for i in range(GP.count(' ')+1):
             print (i,GIP,"|",DuanKouSaiXuan(GP)[i],"|",IIP,"|",DuanKouSaiXuan(SP)[i]) #映射端口检查
@@ -40,19 +39,21 @@ def FW_dnat(JB,i,GIP,GP,IIP,SP):
                 JB['pool']['E'+str(JB_DNAT_line)].value=DuanKouSaiXuan(SP)[i]
             JB['pool']['B'+str(JB_DNAT_line)].value=GIP
             JB['pool']['D'+str(JB_DNAT_line)].value=IIP
-            JB_DNAT_line+=1
+            JB_DNAT_line=JB_DNAT_line+1
     else:
-            print (i,GIP,"|",DuanKouSaiXuan(GP),"|",IIP,"|",DuanKouSaiXuan(SP)) #映射端口检查
-            print ('-----------------------------------------------------')
-            JB['pool']['C'+str(JB_DNAT_line)].value=DuanKouSaiXuan(GP)
-            JB['pool']['E'+str(JB_DNAT_line)].value=DuanKouSaiXuan(SP)
-            JB['pool']['B'+str(JB_DNAT_line)].value=GIP
-            JB['pool']['D'+str(JB_DNAT_line)].value=IIP
-            JB_DNAT_line+=1
+         print (GIP,"|",DuanKouSaiXuan(GP),"|",IIP,"|",DuanKouSaiXuan(SP)) #映射端口检查
+         print ('-----------------------------------------------------')
+         JB['pool']['C'+str(JB_DNAT_line)].value=DuanKouSaiXuan(GP)
+         JB['pool']['E'+str(JB_DNAT_line)].value=DuanKouSaiXuan(SP)
+         JB['pool']['B'+str(JB_DNAT_line)].value=GIP
+         JB['pool']['D'+str(JB_DNAT_line)].value=IIP
+         JB_DNAT_line=JB_DNAT_line+1
+    return JB_DNAT_line
 
 def COPY_Run(JB,line,int_sheet,PJ_Number):
     JC=int_sheet['D'+str(line)].value
     print('NAME:',JC+'|','\n-------------------')
+    JB_DNAT_line=17
     for i in range(PJ_Number):
         GIP=int_sheet['F'+str(line)].value
         GP=int_sheet['G'+str(line)].value
@@ -65,8 +66,9 @@ def COPY_Run(JB,line,int_sheet,PJ_Number):
             IIP=FIP
             SP=FP
         FW_snat(JB,JC,GIP,IIP)       #snat
-        FW_SecurityPolicy(JB,IIP,SP) #Security-policy
-        FW_dnat(JB,i,GIP,GP,IIP,SP)  #DNAT
+        FW_SecurityPolicy(JB,IIP,SP,i) #Security-policy
+        FW_dnat(JB_DNAT_line,JB,GIP,GP,IIP,SP)  #DNAT
+        JB_DNAT_line=FW_dnat(JB_DNAT_line,JB,GIP,GP,IIP,SP)
 
 def main():
     #--------------------------------------open_xlsx----------------------------
