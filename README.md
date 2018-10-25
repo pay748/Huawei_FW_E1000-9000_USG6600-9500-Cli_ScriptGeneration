@@ -19,6 +19,10 @@ PoolCopy_V2.0-mod.py实际起到exc表格数据处理、copy的功能。
     2.service_IpPort_Open statistics.xlsx用于存储和输入ip、port、name等信息，ConfigurationTemplate_V2.10.xlsx为配置生成模板。
     
     3.初次使用注意修改PoolCopy_V2.0-mod.py文件内service_IpPort_Open statistics.xlsx，ConfigurationTemplate_V2.10.xlsx的路径位置，推荐使用绝对路径。
-     
+    
+    4.PoolCopy_V2.0-mod.py不可直接运行直接运行会保存，需要传递参数-p，指定资源池的位置（A网，B网）
     
     It is not pretty (sorry!) but it does the job for me.
+
+10.25 update：
+    根据委exc中委办局列合并单元格的行数确认传入初始值，简化参数传入数，去除两个初始传入参数-l，-n.

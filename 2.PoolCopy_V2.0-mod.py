@@ -77,17 +77,25 @@ def main():
 
     #--------------------------------------定义option----------------------------
     optParser=OptionParser()
-    optParser.add_option("-l","--line",action="store",type="int",
-        dest="op_line",help='数据的起始行')
-    optParser.add_option("-n","--number",action="store",type="int",
-        dest="op_Number",help='操作多少条数据')
+    # optParser.add_option("-l","--line",action="store",type="int",
+        # dest="op_line",help='数据的起始行')
+    # optParser.add_option("-n","--number",action="store",type="int",
+        # dest="op_Number",help='操作多少条数据')
     optParser.add_option("-p","--pool",action="store",type="string",
         dest="op_pool",help='资源池选择，A网还是B网')
     options,args=optParser.parse_args()
 
     #-------------------------------------传参赋值-------------------------------------
-    line=options.op_line
-    PJ_Number=options.op_Number
+    row=fd_pool[options.op_pool].max_row
+    # column=fd_pool[options.op_pool].max_column
+    for i in range(10):
+        if fd_pool[options.op_pool]['B'+str(row-i)].value !=None:
+            print('i的值为:'+str(i+1))
+            line=row-i
+            PJ_Number=i+1
+            break
+    # line=options.op_line
+    # PJ_Number=options.op_Number
     int_sheet=fd_pool[options.op_pool]
     print('-----------------------------------------------------')
     print ('|第'+str(line)+'行|','|'+str(PJ_Number)+'行数据|','|资源池'+str(int_sheet)+'|')
